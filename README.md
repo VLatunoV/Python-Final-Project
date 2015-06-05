@@ -1,5 +1,7 @@
 # Python-Final-Project
 Final project for the Python facultative course
+#Idea:
+Shop API
 
 # Project plans:
 ##class User:
