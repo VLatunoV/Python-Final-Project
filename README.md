@@ -1,6 +1,6 @@
 # Python-Final-Project
 Final project for the Python facultative course
-#Idea:
+#The idea:
 Shop API
 
 # Project plans:
