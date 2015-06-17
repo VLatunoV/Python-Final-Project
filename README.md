@@ -1,5 +1,7 @@
 # Python-Final-Project
 Final project for the Python facultative course
+#The idea:
+Shop API
 
 # Project plans:
 ##class User:
@@ -26,3 +28,9 @@ Final project for the Python facultative course
 ##class ShoppingCart:
 	- items
 	- :functions:
+
+#Functionalities
+- Allow multiple user accounts
+- Allow users to purchase, rate, sort items
+- Allow super user access
+- Allow super users to add, change, remove items
