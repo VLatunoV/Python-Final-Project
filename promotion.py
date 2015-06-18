@@ -25,10 +25,13 @@ class Promotion:
             return price * new_quantity
 
         easy_access = {
-            1: percent_off,
-            2: buy_n
+            Promotion.percent_off: percent_off,
+            Promotion.buy_n: buy_n
         }
         try:
             return easy_access[self.promo_type]()
         except KeyError:
             raise exception.UnallowedTypeError
+
+    def __str__(self):
+        return str(self.promo_type) + ' ' + str(self.value)

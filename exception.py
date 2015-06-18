@@ -4,7 +4,12 @@ class GeneralError(Exception):
     +---PromotionError
     |   +---UnallowedValueError
     |   +---UnallowedTypeError
+    +---UserError
+    |   +---EmptyStringError
     +---ProductError
+    |   +---IncorrectTypeError
+    +---ProductManagerError
+    |   +---FailedToLoadError
     '''
     pass
 
@@ -17,5 +22,20 @@ class UnallowedValueError(PromotionError):
 class UnallowedTypeError(PromotionError):
     pass
 
+class UserError(GeneralError):
+    pass
+
+class EmptyStringError(UserError):
+    pass
+
 class ProductError(GeneralError):
+    pass
+
+class IncorrectTypeError(ProductError):
+    pass
+
+class ProductManagerError(GeneralError):
+    pass
+
+class FailedToLoadError(ProductManagerError):
     pass
