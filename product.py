@@ -2,7 +2,10 @@ import promotion
 #import exception
 
 class Product:
-    def __init__(self, *, name, price, category, ID, tags=[], rating=None,
+    '''
+    Функциите в класа приемат вече отворен файл от product manager-а
+    '''
+    def __init__(self, *, name, price, category, ID=-1, tags=[], rating=None,
         promotion=None):
         self.name = name
         self.price = price
@@ -11,6 +14,12 @@ class Product:
         self.tags = tags
         self.rating = rating
         self.promotion = promotion
+
+    def get_price(self, quantity):
+        if self.promotion:
+            return self.promotion.apply(self.price, quantity)
+        else:
+            return self.price * quantity
 
     def check_exists(self, File):
         position = File.tell()
@@ -42,9 +51,11 @@ class Product:
         File.write('tags=')
         for tag in set(self.tags):
             File.write(tag.replace(' ', '-') + ' ')
+
         File.write('\n' + 'rating=')
         if self.rating:
             File.write(str(self.rating))
+
         File.write('\n' + 'promotion=')
         if self.promotion:
             File.write(str(self.promotion))

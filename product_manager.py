@@ -2,8 +2,8 @@ import product
 #import exception
 
 class ProductManager:
-    file_name = 'product_list'
     def __init__(self):
+        file_name = 'product_list'
         self.products = []
         self.categories = set()
         self.__ID_NEXT = 0
@@ -20,17 +20,19 @@ class ProductManager:
 
     def register_products(self):
         try:
-            with open(ProductManager.file_name, 'w') as File:
+            with open(self.file_name, 'w+') as File:
                 File.write(str(self.__ID_NEXT) + '\n')
                 for p in self.products:
                     p.register(File)
-        except IOError:
+        except IOError as err:
             return False
         return True
 
-    def load_products(self):
+    def load_products(self, *, file_name=''):
+        if file_name:
+            self.file_name = file_name
         try:
-            with open(ProductManager.file_name) as File:
+            with open(self.file_name) as File:
                 self.__ID_NEXT = int(File.readline()[:-1])
                 kw = {'name': '#', 'ID': 0, 'price': 0, 'category': '#'}
                 while(True):

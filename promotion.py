@@ -1,12 +1,6 @@
 import exception
 
 class Promotion:
-    '''
-    Class for product promotions
-    Promotion types:
-        percent off
-        buy n, get 1 free
-    '''
     percent_off = 1
     buy_n = 2
     def __init__(self, *, promo_type, value):
@@ -35,3 +29,9 @@ class Promotion:
 
     def __str__(self):
         return str(self.promo_type) + ' ' + str(self.value)
+
+    def receipt_message(self):
+        if self.promo_type == Promotion.percent_off:
+            return 'Promotion: -{}%'.format(self.value)
+        if self.promo_type == Promotion.buy_n:
+            return 'Promotion: buy {}, get 1 free'.format(self.value)
