@@ -1,41 +1,28 @@
 class GeneralError(Exception):
     '''
     GeneralError
-    +---PromotionError
-    |   +---UnallowedValueError
-    |   +---UnallowedTypeError
-    +---UserError
-    |   +---EmptyStringError
-    +---ProductError
-    |   +---IncorrectTypeError
-    +---ProductManagerError
-    |   +---FailedToLoadError
+    +---InvalidInputError
+        +---IncorrectTypeError
+        +---EmptyFieldError
+        +---UnallowedValueError
+    +---FailedFileOperationError
+        +---FileMissingError
     '''
     pass
-
-class PromotionError(GeneralError):
+class InvalidInputError(GeneralError):
     pass
 
-class UnallowedValueError(PromotionError):
+class IncorrectTypeError(InvalidInputError):
     pass
 
-class UnallowedTypeError(PromotionError):
+class EmptyFieldError(InvalidInputError):
     pass
 
-class UserError(GeneralError):
+class UnallowedValueError(InvalidInputError):
     pass
 
-class EmptyStringError(UserError):
+class FailedFileOperationError(GeneralError):
     pass
 
-class ProductError(GeneralError):
-    pass
-
-class IncorrectTypeError(ProductError):
-    pass
-
-class ProductManagerError(GeneralError):
-    pass
-
-class FailedToLoadError(ProductManagerError):
+class FileMissingError(FailedFileOperationError):
     pass

@@ -1,10 +1,19 @@
 import datetime
+import exception
+import product as product_module
+
 
 class ShoppingCart:
     def __init__(self):
         self.items = {}
 
     def add_item(self, product, quantity=1):
+        if type(product) is not product_module.Product:
+            raise exception.IncorrectTypeError('This is not a product.')
+        if type(quantity) is not int:
+            raise exception.IncorrectTypeError('Quantity must be int.')
+        if quantity < 1:
+            raise exception.UnallowedValueError('Quantity must be positive.')
         try:
             self.items[product] += quantity
         except KeyError:
@@ -17,8 +26,11 @@ class ShoppingCart:
         return result
 
     def receipt(self, *, width=50):
+        if type(width) is not int:
+            raise exception.IncorrectTypeError('Width must be int.')
+
         # ---------------- Calculate column sizes --------------------------
-        if width < 26: # minimum for date + time
+        if width < 26:  # minimum for date + time
             width = 26
         min_name_width = 8
         min_quantity_width = 5
@@ -39,26 +51,36 @@ class ShoppingCart:
             name_width = min_name_width
         width = name_width + quantity_width + price_width + 3
 
+        # ---------------- Define helping functions ------------------------
         def add_line(*, name_area='-', quantity_area='', price_area=''):
-            if name_area == '-':
-                return ('+' + '-' * (name_width + quantity_width)
-                    + '+' + '-' * price_width + '+' + '\n')
-            else:
+            if name_area == '-':  # spacer line
+                return (
+                    '+' + '-' * (name_width + quantity_width) + '+' +
+                    '-' * price_width + '+' + '\n'
+                )
+            else:  # actual content
                 chunk = len(name_area)
                 chunk_size = (name_width - 1)
-                name_parts = [name_area[i:i + chunk_size]
+
+                # split name area field into chunks to fit in name width
+                name_parts = [
+                    name_area[i:i + chunk_size]
                     for i in range(0, chunk, chunk_size)
                 ]
-                result = ('|' + ' ' + name_parts[0].ljust(name_width - 1) +
+                result = (
+                    '|' + ' ' + name_parts[0].ljust(name_width - 1) +
                     quantity_area.rjust(quantity_width - 1) + ' ' + '|' +
-                    price_area.rjust(price_width - 1) + ' ' + '|' + '\n')
+                    price_area.rjust(price_width - 1) + ' ' + '|' + '\n'
+                )  # put 1st chunk with quantity and price info
                 for part in name_parts[1:]:
-                    result += ('|' + ' ' + part.ljust(name_width - 1) +
+                    result += (
+                        '|' + ' ' + part.ljust(name_width - 1) +
                         ' ' * quantity_width + '|' +
-                        ' ' * price_width + '|' + '\n')
+                        ' ' * price_width + '|' + '\n'
+                    )  # leave rest of chunks without
                 return result
 
-        def add_footer():
+        def add_footer():  # adds date and time
             result = '|'
             result += (
                 'Date: ' + str(datetime.datetime.now())[:-10]
@@ -66,13 +88,16 @@ class ShoppingCart:
             result += '|' + '\n'
             result += '+' + '-' * (width - 2) + '+'
             return result
+
         # ---------------- Add column names --------------------------------
         result = add_line()
         result += add_line(
             name_area='Product',
             quantity_area='qty',
-            price_area='price')
+            price_area='price'
+        )
         result += add_line()
+
         # ---------------- Add products ------------------------------------
         for product, quantity in self.items.items():
             normal_price = product.price * quantity
@@ -87,11 +112,13 @@ class ShoppingCart:
                     price_area='{:.2f}'.format(
                         product.get_price(quantity) - normal_price)
                 )
-        # ---------------- rest --------------------------------------------
+
+        # ---------------------- rest --------------------------------------
         result += add_line()
         result += add_line(
             name_area='Total',
-            price_area='{:.2f}'.format(total))
+            price_area='{:.2f}'.format(total)
+        )
         result += add_line()
         result += add_footer()
         return result

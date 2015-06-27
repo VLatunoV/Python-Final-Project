@@ -1,21 +1,54 @@
-import promotion
-#import exception
+import promotion as promotion_module
+import exception
+
 
 class Product:
     '''
     Функциите в класа приемат вече отворен файл от product manager-а
     '''
-    def __init__(self, *, name, price, category, ID=-1, tags=[], rating=None,
-        promotion=None):
+
+    def __init__(
+        self, *, name, price, category, ID=-1, tags=[], rating=None,
+        promotion=None
+    ):
+        if type(name) is not str:
+            raise exception.IncorrectTypeError('Product name must be string.')
+        if type(price) is not int and type(price) is not float:
+            raise exception.IncorrectTypeError('Price must be int or float.')
+        if type(category) is not str:
+            raise exception.IncorrectTypeError('Category must be string.')
+        if not hasattr(tags, '__iter__'):
+            raise exception.IncorrectTypeError('Tags must be iterable.')
+        if any([type(x) is not str for x in tags]):
+            raise exception.IncorrectTypeError('All tags must be string.')
+        if any([not x for x in tags]):
+            raise exception.UnallowedValueError('Cannot have empty tags.')
+        if rating and type(rating) is not int and type(rating) is not float:
+            raise exception.IncorrectTypeError('Rating must be int or float.')
+        if promotion and type(promotion) is not promotion_module.Promotion:
+            raise exception.IncorrectTypeError('This is not a promotion.')
+        if not name:
+            raise exception.EmptyFieldError('Product name left empty.')
+        if price <= 0:
+            raise exception.UnallowedValueError('Price must be positive.')
+        if not category:
+            raise exception.EmptyFieldError('Product category left empty.')
         self.name = name
         self.price = price
         self.category = category
         self.ID = ID
-        self.tags = tags
+        if type(tags) is str:
+            self.tags = [tags]
+        else:
+            self.tags = tags
         self.rating = rating
         self.promotion = promotion
 
     def get_price(self, quantity):
+        if type(quantity) is not int:
+            raise exception.IncorrectTypeError('Quantity must be int.')
+        if quantity < 1:
+            raise exception.UnallowedValueError('Quantity must be position.')
         if self.promotion:
             return self.promotion.apply(self.price, quantity)
         else:
@@ -29,25 +62,21 @@ class Product:
             parts = line.split('=')
             if parts[0] == 'name' and parts[-1][:-1] == self.name:
                 result = True
+                break
             if parts[0] == 'ID' and parts[-1][:-1] == self.ID:
                 result = True
+                break
         File.seek(position, 0)
         return result
 
     def register(self, File):
         if self.check_exists(File):
             return False
-        #if type(self.name) is not str:
-        #    raise exception.IncorrectTypeError
         File.write('name=' + self.name + '\n')
-
-        #if type(self.price) is not int and type(self.price) is not float:
-        #    raise exception.IncorrectTypeError
         File.write('price=' + str(self.price) + '\n')
-
-        #if type(self.category)
         File.write('category=' + self.category + '\n')
         File.write('ID=' + str(self.ID) + '\n')
+
         File.write('tags=')
         for tag in set(self.tags):
             File.write(tag.replace(' ', '-') + ' ')
@@ -83,10 +112,10 @@ class Product:
         promo = File.readline().split('=')[-1][:-1]
         if promo:
             promo_type, value = promo.split(' ')
-            self.promotion = promotion.Promotion(
+            self.promotion = promotion_module.Promotion(
                 promo_type=int(promo_type), value=float(value)
             )
         else:
             self.promotion = None
-        File.readline()
+        File.readline()  # empty line after each product
         return True
