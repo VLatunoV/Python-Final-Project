@@ -25,6 +25,7 @@ def get_num(high=0):
                 break
     return number
 
+
 class CUI:
     def __init__(self):
         self.user = None
@@ -145,7 +146,7 @@ class CUI:
             print('(index)->(quantity)')
             cmd = input()
             try:
-                cmd.replace(' ','')
+                cmd.replace(' ', '')
                 seperate = cmd.split(',')
                 ind_quant = [tuple(x.split('->')) for x in seperate]
                 ind_quant = [(int(tpl[0]), int(tpl[1])) for tpl in ind_quant]
@@ -353,8 +354,8 @@ class CUI:
             if num == 5:
                 try:
                     for index, promo_type in \
-                        enumerate(promotion.Promotion.promo_desc):
-                            print('{}. {}'.format(index, promo_type))
+                            enumerate(promotion.Promotion.promo_desc):
+                        print('{}. {}'.format(index, promo_type))
                     promo_type = int(input('New promotion type: '))
                     promo_value = float(input('New promotion value: '))
                 except ValueError:

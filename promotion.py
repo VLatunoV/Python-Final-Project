@@ -32,17 +32,18 @@ class Promotion:
                 'Promotion value must be int or float.'
             )
         if self.promo_type >= len(Promotion.promo_desc) \
-            or self.promo_type < -1:
-                raise exception.UnallowedValueError(
-                    'Promotion type must be between 0 and {}'.format(
-                        len(Promotion.promo_desc) - 1
-                    )
+                or self.promo_type < -1:
+            raise exception.UnallowedValueError(
+                'Promotion type must be between 0 and {}'.format(
+                    len(Promotion.promo_desc) - 1
                 )
+            )
         if self.promo_type == 1:
             self.value = int(self.value)
 
     def apply(self, price, quantity):
         self.check_types()
+
         def percent_off():
             if self.value < 0 or self.value >= 100.0:
                 raise exception.UnallowedValueError(

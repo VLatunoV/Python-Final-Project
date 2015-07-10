@@ -60,13 +60,13 @@ class Product:
         if any([not x for x in self.tags]):
             raise exception.UnallowedValueError('Cannot have empty tags.')
         if type(self.rating) is not int \
-            and type(self.rating) is not float:
-                raise exception.IncorrectTypeError(
-                    'Rating must be int or float.'
-                )
+                and type(self.rating) is not float:
+            raise exception.IncorrectTypeError(
+                'Rating must be int or float.'
+            )
         if self.promotion \
-            and type(self.promotion) is not promotion_module.Promotion:
-                raise exception.IncorrectTypeError('This is not a promotion.')
+                and type(self.promotion) is not promotion_module.Promotion:
+            raise exception.IncorrectTypeError('This is not a promotion.')
         if not self.name:
             raise exception.EmptyFieldError('Product name left empty.')
         if self.price <= 0:
@@ -125,7 +125,7 @@ class Product:
         rating = File.readline().split('=')[-1][:-1]
         splet = rating.split(' ')
         self.rating, self.rate_count = float(splet[0]), int(splet[1])
-        
+
         promo = File.readline().split('=')[-1][:-1]
         if promo:
             promo_type, value = promo.split(' ')
