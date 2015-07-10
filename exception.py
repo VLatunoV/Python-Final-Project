@@ -6,9 +6,9 @@ class GeneralError(Exception):
         +---EmptyFieldError
         +---UnallowedValueError
     +---FailedFileOperationError
-        +---FileMissingError
     '''
     pass
+
 class InvalidInputError(GeneralError):
     pass
 
@@ -22,7 +22,4 @@ class UnallowedValueError(InvalidInputError):
     pass
 
 class FailedFileOperationError(GeneralError):
-    pass
-
-class FileMissingError(FailedFileOperationError):
     pass

@@ -19,6 +19,15 @@ class ShoppingCart:
         except KeyError:
             self.items[product] = quantity
 
+    def remove_item(self, product):
+        if type(product) is not product_module.Product:
+            raise exception.IncorrectTypeError('This is not a product.')
+        try:
+            del self.items[product]
+        except KeyError:
+            return False
+        return True
+
     def total(self):
         result = 0
         for product, quantity in self.items.items():

@@ -4,10 +4,9 @@ import exception
 
 class ProductManager:
     def __init__(self):
-        file_name = 'product_list'
+        self.file_name = 'product_list'
         self.products = []
         self.categories = set()
-        self.__ID_NEXT = 0
 
     def add_product(self, product):
         if type(product) is not product_module.Product:
@@ -15,16 +14,13 @@ class ProductManager:
         for p in self.products:
             if product.name == p.name:
                 return False
-        product.ID = self.__ID_NEXT
-        self.__ID_NEXT += 1
         self.products.append(product)
         self.categories.add(product.category)
         return True
 
     def register_products(self):
         try:
-            with open(self.file_name, 'w+') as File:
-                File.write(str(self.__ID_NEXT) + '\n')
+            with open(self.file_name, 'w') as File:
                 for p in self.products:
                     p.register(File)
         except IOError as err:
@@ -42,8 +38,7 @@ class ProductManager:
             self.file_name = file_name
         try:
             with open(self.file_name) as File:
-                self.__ID_NEXT = int(File.readline()[:-1])
-                kw = {'name': '#', 'ID': 1, 'price': 1, 'category': '#'}
+                kw = {'name': '#', 'price': 1, 'category': '#'}
                 while(True):
                     temp = product_module.Product(**kw)
                     if temp.read(File):
@@ -52,9 +47,15 @@ class ProductManager:
                     else:
                         break
         except FileNotFoundError:
-            raise exception.FileMissingError(
-                'File "{0}" is missing.'.format(self.file_name)
-            )
+            try:
+                with open(self.file_name, 'w') as File:
+                    pass
+            except IOError:
+                raise exception.FailedFileOperationError(
+                    '"{0}" occurred while trying to create {1}'.format(
+                        str(err), self.file_name
+                    )
+                )
         except IOError as err:
             raise exception.FailedFileOperationError(
                 '"{0}" occurred while trying to read {1}'.format(
@@ -62,3 +63,41 @@ class ProductManager:
                 )
             )
         return True
+
+    def search(self, keyword, key='name'):
+        if type(keyword) is not str:
+            raise exception.IncorrectTypeError(
+                'Search keyword must be string.'
+            )
+        if not keyword:
+            raise exception.EmptyFieldError('Required keyword left empty.')
+        if type(key) is not str:
+            raise exception.IncorrectTypeError('Search key must be string.')
+        result = []
+        try:
+            if key == 'tags':
+                result = [
+                    x for x in self.products if keyword in getattr(x, key)
+                ]
+            else:
+                result = [
+                    x for x in self.products if
+                    getattr(x, key).find(keyword) != -1
+                ]
+        except (AttributeError, TypeError):
+            raise exception.UnallowedValueError(
+                'Cannot search by {}'.format(key)
+            )
+        else:
+            pm = ProductManager()
+            pm.products = result
+            pm.categories = set([x.category for x in result])
+            return pm
+
+    def sort(self, key=lambda x: x.name.lower(), reverse=False):
+        try:
+            self.products.sort(key=key, reverse=reverse)
+        except (AttributeError, ValueError):
+            raise exception.UnallowedValueError(
+                'Cannot sort by {}'.format(key)
+            )

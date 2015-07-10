@@ -1,0 +1,63 @@
+name=Borderline Product
+price=0.99
+category=faith
+tags=praise sun 
+rating=0.0 0
+promotion=
+
+name=New product
+price=40.0
+category=new
+tags=
+rating=0.0 0
+promotion=1 4
+
+name=New testing Object
+price=543.03
+category=test
+tags=
+rating=0.0 0
+promotion=0 15.7
+
+name=other
+price=400.0
+category=other
+tags=no tags 
+rating=0.0 1
+promotion=
+
+name=prod 1
+price=10.0
+category=solid
+tags=tag-2 tag-1 
+rating=5.833333333333333 6
+promotion=
+
+name=prod 2
+price=48.26
+category=other
+tags=test unit 
+rating=5.5 2
+promotion=
+
+name=prod 3
+price=48.26
+category=other
+tags=test unit 
+rating=0.0 0
+promotion=0 35.0
+
+name=q
+price=1.0
+category=2
+tags=
+rating=155.0 1
+promotion=
+
+name=Testing Prod
+price=100.0
+category=test
+tags=
+rating=0.0 0
+promotion=
+
